@@ -308,7 +308,26 @@ describe('KeypadController', () => {
         it('config should still contain the same numbers after keypad constructed', () => {
             const buttons = vm.bcKeypadConfig.numbers;
 
-            expect(buttons).toEqual(defaultNumbers)
+            expect(buttons).toEqual(defaultNumbers);
+        });
+
+        it('config should still remain the same after keypad constructions', () => {
+            for (let i = 0; i < 3; i = i + 1) { // eslint-disable-line no-magic-numbers
+                $scope = $rootScope.$new();
+                $scope.numbers = '';
+                element = angular.element(`
+                        <bc-keypad
+                            bc-number-model="numbers"
+                        ></bc-keypad>
+                    `);
+                element = $compile(element)($scope);
+                $scope.$apply();
+                vm = element.isolateScope().vm;
+
+                const buttons = vm.bcKeypadConfig.numbers;
+
+                expect(buttons).toEqual(defaultNumbers);
+            }
         });
 
         it('the keypad should have 12 buttons given a left and right method', () => {
