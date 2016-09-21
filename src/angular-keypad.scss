@@ -19,6 +19,9 @@
   $color_black: #000;
   $color_white: #fff;
   $color_light_gray: #ccc;
+  $single_button: calc(100% / 3);
+  $double_button: calc(200% / 3);
+  $triple_button: 100%;
 
   // Define a nice scale effect animation
   @keyframes ripple {
@@ -50,7 +53,30 @@
   &__key {
     position: relative;
     text-align: center;
-    width: calc(100% / 3);
+    width: $single_button;
+
+    &--left {
+        &.bc-keypad--noCenter {
+            &.bc-keypad--noRight {
+                width: $triple_button;
+            }
+        }
+        &.bc-keypad--noRight {
+            width: $double_button;
+        }
+    }
+
+    &--right {
+        &.bc-keypad--noCenter {
+            width: $double_button;
+            &.bc-keypad--noLeft {
+                width: $triple_button;
+            }
+        }
+        &.bc-keypad--noLeft {
+            width: $double_button;
+        }
+    }
 
     &::before {
       display: block;

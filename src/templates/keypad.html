@@ -15,12 +15,15 @@
   </div>
 
 
-  <div class="bc-keypad__key  bc-keypad__key--left">
+  <div class="bc-keypad__key  bc-keypad__key--left"
+       ng-class="::{'bc-keypad--noCenter': !vm.lastNumberIsButton, 'bc-keypad--noRight': !vm.bcRightButton}"
+       ng-if="::vm.bcLeftButton">
     <ng-include src="vm.keyTemplate(vm.bcLeftButton, 'Left')"></ng-include>
   </div>
 
 
-  <div class="bc-keypad__key  bc-keypad__key--center">
+  <div class="bc-keypad__key  bc-keypad__key--center"
+       ng-if="::vm.lastNumberIsButton">
     <button
       class="bc-keypad__key-button"
       data-ng-click="vm.setNumber(vm.lastNumber)"
@@ -31,7 +34,9 @@
   </div>
 
 
-  <div class="bc-keypad__key  bc-keypad__key--right">
+  <div class="bc-keypad__key  bc-keypad__key--right"
+       ng-class="::{'bc-keypad--noLeft': !vm.bcLeftButton, 'bc-keypad--noCenter': !vm.lastNumberIsButton}"
+       ng-if="::vm.bcRightButton">
     <ng-include src="vm.keyTemplate(vm.bcRightButton, 'Right')"></ng-include>
   </div>
 

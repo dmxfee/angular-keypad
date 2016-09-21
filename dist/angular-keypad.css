@@ -45,6 +45,26 @@
   width: calc(100% / 3);
 }
 
+.bc-keypad__key--left.bc-keypad--noCenter.bc-keypad--noRight {
+  width: 100%;
+}
+
+.bc-keypad__key--left.bc-keypad--noRight {
+  width: calc(200% / 3);
+}
+
+.bc-keypad__key--right.bc-keypad--noCenter {
+  width: calc(200% / 3);
+}
+
+.bc-keypad__key--right.bc-keypad--noCenter.bc-keypad--noLeft {
+  width: 100%;
+}
+
+.bc-keypad__key--right.bc-keypad--noLeft {
+  width: calc(200% / 3);
+}
+
 .bc-keypad__key::before {
   display: block;
   content: '';

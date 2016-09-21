@@ -24,6 +24,8 @@ export class KeypadConfig {
             backspaceTemplate: backspaceTemplate,
             submitTemplate: submitTemplate,
 
+            keysPerRow: 3, // eslint-disable-line no-magic-numbers
+
         };
 
     }

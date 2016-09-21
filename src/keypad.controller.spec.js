@@ -293,6 +293,8 @@ describe('KeypadController', () => {
             element = angular.element(`
                     <bc-keypad
                         bc-number-model="numbers"
+                        bc-left-button="backspace"
+                        bc-right-button="submit"
                         bc-left-button-method="buttonLeft($event, numbers)"
                         bc-right-button-method="buttonRight($event, numbers)"
                     ></bc-keypad>
