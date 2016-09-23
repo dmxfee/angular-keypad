@@ -145,6 +145,16 @@ export class KeypadController {
 
     }
 
+    onKeyPressed($event) {
+        const keyChar = $event.key;
+
+        for (const number in this.numbers) {
+            if (number === keyChar) {
+                this.setNumber(number);
+                return;
+            }
+        }
+    }
 
 }
 
