@@ -40,7 +40,10 @@ export class KeypadController {
         this.numbers = this.bcKeypadConfig.numbers.slice();
 
         // Pull the last number off of the array so that we can inject it outside of the ng-repeat
-        this.lastNumber = this.numbers.splice(this.numbers.length - 1, 1)[0];
+        // Only a center number iff a single number outside a row
+        if (this.numbers.length % this.bcKeypadConfig.keysPerRow === 1) {
+            this.lastNumber = this.numbers.splice(this.numbers.length - 1, 1)[0];
+        }
 
         // Set the max length
         this.bcMaxLength = this.bcMaxLength || this.bcKeypadConfig.maxLength;
@@ -57,7 +60,8 @@ export class KeypadController {
     setNumber(number) {
         // If a max length is defined, verify we have not yet reached it
         if (!this.bcMaxLength || this.bcNumberModel.length < this.bcMaxLength) {
-            this.bcNumberModel += number;
+            this.bcNumberModel += number
+            this.onNumberChanged({ 'number': number });
         }
     }
 
@@ -140,7 +144,6 @@ export class KeypadController {
         }
 
     }
-
 
 }
 

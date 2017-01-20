@@ -183,6 +183,7 @@ describe('KeypadController', () => {
             $scope = $rootScope.$new();
             $scope.buttonLeft = function($event, numbers) {};
             $scope.buttonRight = function($event, numbers) {};
+            $scope.numberChanged = function(number) {};
             $scope.numbers = '12';
             element = angular.element(`
                 <bc-keypad
@@ -191,6 +192,7 @@ describe('KeypadController', () => {
                     bc-right-button="submit"
                     bc-left-button-method="buttonLeft($event, numbers)"
                     bc-right-button-method="buttonRight($event, numbers)"
+                    on-number-changed="numberChanged(number)"
                 ></bc-keypad>
             `);
             element = $compile(element)($scope);
@@ -199,6 +201,7 @@ describe('KeypadController', () => {
 
             spyOn($scope, 'buttonLeft');
             spyOn($scope, 'buttonRight');
+            spyOn($scope, 'numberChanged');
         });
 
         afterEach(() => {
@@ -235,6 +238,14 @@ describe('KeypadController', () => {
             angular.element(numberButton).triggerHandler('click');
 
             expect($scope.buttonRight).toHaveBeenCalled();
+        });
+
+        it('should call onNumberChanged when a number is clicked', () => {
+            const buttonArray = element[0].querySelectorAll('.bc-keypad__key > button');
+            const numberButton = buttonArray[2];
+            angular.element(numberButton).triggerHandler('click');
+
+            expect($scope.numberChanged).toHaveBeenCalled();
         });
 
     });
@@ -283,7 +294,20 @@ describe('KeypadController', () => {
         let element;
         let vm;
         const defaultNumbers =
-          [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]; // eslint-disable-line no-magic-numbers
+            [
+                { number: 1, superscript: '' },
+                { number: 2, superscript: 'ABC' },
+                { number: 3, superscript: 'DEF' },
+                { number: 4, superscript: 'GHI' },
+                { number: 5, superscript: 'JKL' },
+                { number: 6, superscript: 'MNO' },
+                { number: 7, superscript: 'PQRS' },
+                { number: 8, superscript: 'TUV' },
+                { number: 9, superscript: 'WXYZ' },
+                { number: '*', superscript: '' },
+                { number: 0, superscript: '+' },
+                { number: '#', superscript: '' },
+            ]; // eslint-disable-line no-magic-numbers
 
         beforeEach(() => {
             $scope = $rootScope.$new();
@@ -293,6 +317,8 @@ describe('KeypadController', () => {
             element = angular.element(`
                     <bc-keypad
                         bc-number-model="numbers"
+                        bc-left-button="backspace"
+                        bc-right-button="submit"
                         bc-left-button-method="buttonLeft($event, numbers)"
                         bc-right-button-method="buttonRight($event, numbers)"
                     ></bc-keypad>
@@ -338,6 +364,47 @@ describe('KeypadController', () => {
 
     });
 
+    describe('callback calling', () => {
+        let $scope;
+        let element;
+        let vm;
+        let event;
+
+        beforeEach(() => {
+            $scope = $rootScope.$new();
+            $scope.numberChanged = function(number) { };
+            $scope.submitMethod = function(numbers) { };
+            $scope.buttonLeft = function($event, numbers) { };
+            $scope.buttonRight = function($event, numbers) { };
+            $scope.numbers = '12';
+            element = angular.element(`
+                    <bc-keypad
+                        bc-number-model="numbers"
+                        bc-left-button="backspace"
+                        bc-right-button="submit"
+                        bc-left-button-method="buttonLeft($event, numbers)"
+                        bc-right-button-method="buttonRight($event, numbers)"
+                        on-number-changed="numberChanged(number)"
+                        bc-submit-method="submitMethod(numbers)"
+                    ></bc-keypad>
+                `);
+            element = $compile(element)($scope);
+            $scope.$apply();
+            vm = element.isolateScope().vm;
+
+            spyOn($scope, 'buttonLeft');
+            spyOn($scope, 'buttonRight');
+            spyOn($scope, 'numberChanged');
+            spyOn($scope, 'submitMethod');
+        });
+
+        it('it should call onNumberChanged with 3 on the keydown event', () => {
+            vm.setNumber('3');
+
+            expect($scope.numberChanged).toHaveBeenCalledWith('3');
+        });
+
+    });
 
 });
 
