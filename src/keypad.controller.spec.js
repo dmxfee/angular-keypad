@@ -406,6 +406,5 @@ describe('KeypadController', () => {
 
     });
 
-
 });
 
