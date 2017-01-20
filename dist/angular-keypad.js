@@ -96,7 +96,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.keypadDefaults = {
 	
 	            // The array of numbers that makes up the keypad
-	            numbers: [1, 2, 3, 4, 5, 6, 7, 8, 9, 0], // eslint-disable-line no-magic-numbers
+	            numbers: [{ number: 1, superscript: '' }, { number: 2, superscript: 'ABC' }, { number: 3, superscript: 'DEF' }, { number: 4, superscript: 'GHI' }, { number: 5, superscript: 'JKL' }, { number: 6, superscript: 'MNO' }, { number: 7, superscript: 'PQRS' }, { number: 8, superscript: 'TUV' }, { number: 9, superscript: 'WXYZ' }, { number: '*', superscript: '' }, { number: 0, superscript: '+' }, { number: '#', superscript: '' }], // eslint-disable-line no-magic-numbers
 	
 	            // By default there is no max length
 	            // Integer
@@ -213,13 +213,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	        replace: true,
 	        scope: {},
 	        bindToController: {
-	            bcNumberModel: '=',
+	            bcNumberModel: '=?',
 	            bcMaxLength: '@',
 	            bcLeftButton: '@',
 	            bcRightButton: '@',
 	            bcLeftButtonMethod: '&',
 	            bcRightButtonMethod: '&',
-	            bcEmptyBackspaceMethod: '&'
+	            bcEmptyBackspaceMethod: '&',
+	            bcSubmitMethod: '&',
+	            onNumberChanged: '&'
 	        },
 	        templateUrl: _keypad3.default,
 	        controller: _keypad.KeypadController,
@@ -298,7 +300,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	            // Only a center number iff a single number outside a row
 	            if (this.numbers.length % this.bcKeypadConfig.keysPerRow === 1) {
 	                this.lastNumber = this.numbers.splice(this.numbers.length - 1, 1)[0];
-	                this.lastNumberIsButton = true;
 	            }
 	
 	            // Set the max length
@@ -319,6 +320,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            // If a max length is defined, verify we have not yet reached it
 	            if (!this.bcMaxLength || this.bcNumberModel.length < this.bcMaxLength) {
 	                this.bcNumberModel += number;
+	                this.onNumberChanged({ 'number': number });
 	            }
 	        }
 	
@@ -410,18 +412,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	                this.$templateCache.put(_path, this.bcKeypadConfig.customBackspaceTemplate);
 	            }
 	        }
-	    }, {
-	        key: 'onKeyPressed',
-	        value: function onKeyPressed($event) {
-	            var keyChar = $event.key;
-	
-	            for (var number in this.numbers) {
-	                if (number === keyChar) {
-	                    this.setNumber(number);
-	                    return;
-	                }
-	            }
-	        }
 	    }]);
 	
 	    return KeypadController;
@@ -468,7 +458,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports) {
 
 	var path = 'C:/Repos/angular-keypad/src/templates/keypad.html';
-	var html = "<div class=bc-keypad ng-keypress=vm.onKeyPressed($event)> <div class=bc-keypad__key data-ng-repeat=\"number in ::vm.numbers track by number\"> <button class=bc-keypad__key-button data-ng-click=vm.setNumber(number) angular-ripple aria-role=\"{{ ::number }}\"> {{ ::number }} </button> </div> <div class=\"bc-keypad__key bc-keypad__key--left\" ng-class=\"::{'bc-keypad--noCenter': !vm.lastNumberIsButton, 'bc-keypad--noRight': !vm.bcRightButton}\" ng-if=::vm.bcLeftButton> <ng-include src=\"vm.keyTemplate(vm.bcLeftButton, 'Left')\"></ng-include> </div> <div class=\"bc-keypad__key bc-keypad__key--center\" ng-if=::vm.lastNumberIsButton> <button class=bc-keypad__key-button data-ng-click=vm.setNumber(vm.lastNumber) angular-ripple> {{ ::vm.lastNumber }} </button> </div> <div class=\"bc-keypad__key bc-keypad__key--right\" ng-class=\"::{'bc-keypad--noLeft': !vm.bcLeftButton, 'bc-keypad--noCenter': !vm.lastNumberIsButton}\" ng-if=::vm.bcRightButton> <ng-include src=\"vm.keyTemplate(vm.bcRightButton, 'Right')\"></ng-include> </div> </div> ";
+	var html = "<div class=bc-keypad> <div class=bc-keypad__key data-ng-repeat=\"number in ::vm.numbers track by number.number\"> <button class=bc-keypad__key-button data-ng-click=vm.setNumber(number.number) angular-ripple aria-role=\"{{ ::number.number }}\"> {{ ::number.number }} </button> <sup>{{ ::number.superscript}}</sup> </div> <div class=\"bc-keypad__key bc-keypad__key--left\" ng-class=\"::{'bc-keypad--noCenter': !vm.lastNumber, 'bc-keypad--noRight': !vm.bcRightButton}\" ng-if=::vm.bcLeftButton> <ng-include src=\"vm.keyTemplate(vm.bcLeftButton, 'Left')\"></ng-include> </div> <div class=\"bc-keypad__key bc-keypad__key--center\" ng-if=::vm.lastNumber> <button class=bc-keypad__key-button data-ng-click=vm.setNumber(vm.lastNumber.number) angular-ripple> {{ ::vm.lastNumber.number }} </button> <sup>{{ ::number.superscript}}</sup> </div> <div class=\"bc-keypad__key bc-keypad__key--right\" ng-class=\"::{'bc-keypad--noLeft': !vm.bcLeftButton, 'bc-keypad--noCenter': !vm.lastNumber}\" ng-if=::vm.bcRightButton> <ng-include src=\"vm.keyTemplate(vm.bcRightButton, 'Right')\"></ng-include> </div> </div> ";
 	window.angular.module('ng').run(['$templateCache', function(c) { c.put(path, html) }]);
 	module.exports = path;
 

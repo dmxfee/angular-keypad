@@ -43,7 +43,6 @@ export class KeypadController {
         // Only a center number iff a single number outside a row
         if (this.numbers.length % this.bcKeypadConfig.keysPerRow === 1) {
             this.lastNumber = this.numbers.splice(this.numbers.length - 1, 1)[0];
-            this.lastNumberIsButton = true;
         }
 
         // Set the max length
@@ -61,7 +60,8 @@ export class KeypadController {
     setNumber(number) {
         // If a max length is defined, verify we have not yet reached it
         if (!this.bcMaxLength || this.bcNumberModel.length < this.bcMaxLength) {
-            this.bcNumberModel += number;
+            this.bcNumberModel += number
+            this.onNumberChanged({ 'number': number });
         }
     }
 
@@ -143,17 +143,6 @@ export class KeypadController {
             this.$templateCache.put(path, this.bcKeypadConfig.customBackspaceTemplate);
         }
 
-    }
-
-    onKeyPressed($event) {
-        const keyChar = $event.key;
-
-        for (const number in this.numbers) {
-            if (number === keyChar) {
-                this.setNumber(number);
-                return;
-            }
-        }
     }
 
 }
